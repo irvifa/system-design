@@ -71,8 +71,6 @@ For example, if a build increases latency beyond acceptable levels, we can mitig
 
 We can configure our CD pipeline to divide production hosts into groups, gradually assigning builds to each group. If the cluster size changes, the pipeline can reassign or redeploy hosts as needed.
 
-#### Experimentation
-
 #### **Experimentation**
 
 When introducing UX changes, new features, or design updates, we often roll them out gradually to an increasing percentage of users instead of all users at once. Unlike gradual rollouts, which focus on performance and user churn, **experimentation** aims to analyze how UX changes influence user behavior. Common approaches include **A/B testing** and **multivariate testing** (e.g., multi-armed bandit).
@@ -83,9 +81,37 @@ A key difference from gradual rollouts is that experimentation uses dedicated to
 
 Both **CD** and experimentation allow for short feedback cycles, enabling quick evaluation of deployments and features.
 
-### Infrastructure as a Code
+### Infrastructure&#x20;
+
+#### Infrastructure as a Code
 
 Our services are containerized using Docker, managed on host clusters with Kubernetes for scaling and load balancing, and configured using tools like Ansible or Terraform across multiple clusters.
+
+#### Cloud Provider vs Bare Metal
+
+Cloud Services
+
+| **Category**             | **Advantages**                                                                                 | **Disadvantages**                                                                         |
+| ------------------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **Setup**                | Easy and fast setup with pre-built services (e.g., CI/CD, databases).                          | N/A                                                                                       |
+| **Cost**                 | No upfront hardware costs; pay-as-you-go pricing; auto-scaling support.                        | Costs can rise unexpectedly with vendor lock-in or overuse.                               |
+| **Focus on Development** | Reduces infrastructure setup, enabling engineers to focus on features.                         | N/A                                                                                       |
+| **Support and Quality**  | Superior documentation, support, and error handling due to competition and economies of scale. | Dependence on third-party providers for quality and reliability.                          |
+| **Upgrades**             | Automatic hardware and software upgrades managed by the provider.                              | N/A                                                                                       |
+| **Vendor Lock-In**       | N/A                                                                                            | Vendor lock-in makes migrating providers complex and costly.                              |
+| **Privacy and Security** | N/A                                                                                            | <p>Less control over data privacy and security; trust in </p><p>provider is required.</p> |
+
+Bare Metal
+
+| **Category**             | **Advantages**                                                       | **Disadvantages**                                               |
+| ------------------------ | -------------------------------------------------------------------- | --------------------------------------------------------------- |
+| **Setup**                | Full control over setup and configuration.                           | Manual setup is time-consuming and resource-intensive.          |
+| **Cost**                 | No recurring provider costs; more predictable long-term costs.       | High upfront costs for hardware; difficult to scale quickly.    |
+| **Focus on Development** | Direct control over all infrastructure components.                   | Engineers may spend time on repetitive infrastructure tasks.    |
+| **Support and Quality**  | Custom solutions tailored to internal needs (if well-resourced).     | Internal support and documentation may be of lower quality.     |
+| **Upgrades**             | Full ownership of hardware and software upgrades.                    | Upgrades are costly, complex, and require dedicated expertise.  |
+| **Vendor Lock-In**       | No vendor dependency; easier to migrate or scale on own terms.       | N/A                                                             |
+| **Privacy and Security** | Greater control over privacy and security; verification is possible. | Higher burden to maintain and secure infrastructure personally. |
 
 ### API gateway
 
