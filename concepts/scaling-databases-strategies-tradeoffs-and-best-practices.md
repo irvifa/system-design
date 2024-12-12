@@ -1,4 +1,4 @@
-# Scaling Databases: Strategies, Tradeoffs, and Best Practices1
+# Scaling Databases: Strategies, Tradeoffs, and Best Practices
 
 We'll explore essential strategies and concepts in scaling databases, delving into the intricacies of various storage services, database replication techniques for scalability and reliability, event aggregation to minimize writes, the nuanced differences between normalization and denormalization, and the strategic implementation of query caching to enhance system performance. Through a comprehensive examination of these topics, we'll uncover their unique tradeoffs and provide guidance on selecting the most appropriate approaches for effective system design.
 
@@ -49,14 +49,26 @@ Choosing between a database and alternatives like file, block, or object storage
 
 Database replication involves copying data across nodes to improve scalability and fault tolerance. **Replication** techniques include:
 
-1. **Single-Leader Replication**: All writes occur on one leader node, replicated to follower nodes.
-   * **Pros**: Simple to implement; scales reads effectively.
-   * **Cons**: Limited by single-node write throughput; eventual consistency.
-2. **Multi-Leader Replication**: Multiple nodes act as leaders to handle writes.
-   * **Challenges**: Race conditions and ordering conflicts must be resolved.
-3. **Leaderless Replication**: All nodes are equal, and writes are accepted on any node.
-   * **Quorum** ensures consistency by requiring agreement from a subset of nodes.
-4. **HDFS Replication**: Used in distributed systems like Hadoop. Data is sharded across nodes for fault tolerance.
+**Single-Leader Replication**: All writes occur on one leader node, replicated to follower nodes.
+
+* **Pros**: Simple to implement; scales reads effectively.
+* **Cons**: Limited by single-node write throughput; eventual consistency.
+
+
+
+<figure><img src="../.gitbook/assets/Screenshot 2024-12-12 at 19.29.12.png" alt=""><figcaption><p>single-leader replication</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/Screenshot 2024-12-12 at 19.22.12.png" alt=""><figcaption><p>Multi-level replication</p></figcaption></figure>
+
+**Multi-Leader Replication**: Multiple nodes act as leaders to handle writes.
+
+* **Challenges**: Race conditions and ordering conflicts must be resolved.
+
+**Leaderless Replication**: All nodes are equal, and writes are accepted on any node.
+
+* **Quorum** ensures consistency by requiring agreement from a subset of nodes.
+
+**HDFS Replication**: Used in distributed systems like Hadoop. Data is sharded across nodes for fault tolerance.
 
 ***
 
