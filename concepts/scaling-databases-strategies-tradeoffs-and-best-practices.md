@@ -137,11 +137,3 @@ Cache invalidation ensures that stale data is removed or updated. Techniques inc
 * **Fingerprinting**: Use versioned file names or query hashes to force updates.
 
 ***
-
-### Further Reading
-
-* _Designing Data-Intensive Applications_ by Martin Kleppmann
-* _Web Scalability for Startup Engineers_ by Artur Ejsmont
-* _Cloud Native Patterns_ by Cornelia Davis
-
-***
