@@ -5,3 +5,4 @@
   * [Scaling Service](concepts/scaling-service.md)
   * [System Design Interview Flow](concepts/system-design-interview-flow.md)
   * [Understanding Non-Functional Requirements in System Design](concepts/understanding-non-functional-requirements-in-system-design.md)
+  * [Scaling Databases: Strategies, Tradeoffs, and Best Practices1](concepts/scaling-databases-strategies-tradeoffs-and-best-practices1.md)
