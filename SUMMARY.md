@@ -8,3 +8,4 @@
   * [Scaling Databases: Strategies, Tradeoffs, and Best Practices](concepts/scaling-databases-strategies-tradeoffs-and-best-practices.md)
   * [Distributed Transactions](concepts/distributed-transactions.md)
   * [Common Services for Functional Partitioning in Modern System Design](concepts/common-services-for-functional-partitioning-in-modern-system-design.md)
+  * [Choosing the Right API Architecture: A Comprehensive Guide](concepts/choosing-the-right-api-architecture-a-comprehensive-guide.md)
