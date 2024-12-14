@@ -92,10 +92,141 @@ If the size of a database exceeds the capacity of a single node, **sharding** be
 
 Database writes are expensive and challenging to scale. Techniques like **aggregation** reduce the number of writes by combining events:
 
-1. **Single-Tier Aggregation**: A single layer of hosts aggregates events before writing to the database.
-2. **Multi-Tier Aggregation**: Multiple layers progressively aggregate events.
+**Single-Tier Aggregation**: A single layer of hosts aggregates events before writing to the database.
+
+<figure><img src="../.gitbook/assets/Screenshot 2024-12-14 at 14.32.29.png" alt=""><figcaption></figcaption></figure>
+
+**Multi-Tier Aggregation**: Multiple layers progressively aggregate events.
+
+<figure><img src="../.gitbook/assets/Screenshot 2024-12-14 at 14.38.15.png" alt=""><figcaption></figcaption></figure>
 
 **Tradeoffs**: Eventual consistency and added latency due to the aggregation process.
+
+***
+
+### Handling Large Key Spaces Effectively
+
+In real-world implementations, your key space will be far more complex than a simple A-Z range. The primary goal is to prevent memory overflow in successive aggregation levels. This requires a strategic approach to distributing and limiting key spaces across different host levels.
+
+Consider a multi-tiered aggregation service where hosts in earlier levels must carefully manage their key space. A practical strategy is to intentionally limit each level's key space to less than its full memory capacity. This approach ensures that subsequent aggregation levels have sufficient memory to accommodate all incoming keys.
+
+For instance, in a two-level aggregation setup:
+
+* First-level hosts should use only half their available memory
+* This reservation allows the second-level host to successfully aggregate keys from all first-level hosts
+
+You can also optimize this further by provisioning hosts with varying memory configurations:
+
+* Earlier aggregation levels: Hosts with less memory
+* Later aggregation levels: Hosts with more memory
+
+#### Addressing Fault Tolerance Challenges
+
+One of the most significant risks in event aggregation systems is the potential for cascading failures. When a single host goes down, it doesn't just lose its own aggregated events—it can trigger a domino effect that causes data loss across multiple levels.
+
+Traditional solutions like checkpointing and dead letter queues can help, but they're not perfect. Repeating processing for a large number of hosts can waste computational resources and introduce significant latency.
+
+### A Robust Solution: Stateless Service Clusters
+
+A more elegant approach is to convert each aggregation node into an independent service with multiple stateless nodes. Here's how this might look:
+
+* Replace individual nodes with service clusters
+* Use a shared in-memory database like Redis for coordination
+* Implement load balancing across multiple hosts
+* Maintain a small number of hosts (e.g., three) for fault tolerance
+
+This design offers several advantages:
+
+* Improved system resilience
+* Reduced risk of complete data loss
+* Ability to handle host failures gracefully
+
+***
+
+### Batch vs. Streaming: Choosing the Right Approach
+
+ETL is fundamentally about moving and transforming data between systems, but the approach can vary significantly. Two primary paradigms emerge:
+
+### Batch Processing
+
+* Periodic data processing at fixed intervals
+* Ideal for scheduled tasks like monthly billing generation
+* Works best when:
+  * Data is only available at specific times
+  * Large volumes of data need comprehensive processing
+
+### Streaming Processing
+
+* Continuous, real-time data flow
+* Processes data immediately as it becomes available
+* Advantages include:
+  * Near-instantaneous updates
+  * Distributed processing costs
+  * Easier debugging of smaller data chunks
+
+#### The Messaging Ecosystem: Key Concepts
+
+Understanding messaging systems is critical for building responsive, decoupled architectures:
+
+### Core Terminology
+
+* **Messaging System**: A framework for transferring data between applications
+* **Message Queue**: A waiting area for work instructions
+* **Producer/Consumer**: An asynchronous system where event producers are separated from event processors
+* **Message Broker**: A translation layer between different messaging protocols
+
+### Communication Strategies: Pull vs. Push
+
+The debate between pull and push mechanisms is nuanced:
+
+**Pull (Recommended in Most Cases)**
+
+* Consumer controls message consumption rate
+* Prevents system overload
+* Provides better load balancing
+* Ideal for most enterprise applications
+
+**Push (Specific Use Cases)**
+
+* Better for live streaming applications
+* Useful when collecting data from multiple sources
+* Provides more timely updates
+
+#### Tools of the Trade
+
+Different tools serve different ETL and streaming needs:
+
+**Batch Processing Tools**
+
+* Airflow
+* Luigi
+
+**Streaming Tools**
+
+* Kafka
+* Flink
+* Flume (specialized for logging)
+
+#### Architectural Patterns: Lambda vs. Kappa
+
+Two prominent architectures for handling complex data processing:
+
+### Lambda Architecture
+
+* Runs parallel batch and streaming pipelines
+* Fast pipeline: Lower accuracy, higher speed
+* Slow pipeline: High consistency, lower speed
+* Uses techniques like:
+  * Approximation algorithms
+  * In-memory databases
+  * Varied replication strategies
+
+### Kappa Architecture
+
+* Single technology stack for batch and streaming
+* Uses an append-only log (like Kafka)
+* Simplified compared to Lambda
+* Processes all data as a continuous stream
 
 ***
 
